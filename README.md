@@ -1,6 +1,6 @@
-# tripperflow
+# Tripperflow
 
-Aplicación móvil informativa para visualizar información acerca de las capitales de Centroamérica y sus principales sitios turísticos.
+Aplicación móvil informativa de las capitales de Centroamérica y sus principales lugares turísticos.
 
 ## Getting Started
 

@@ -1,5 +1,5 @@
 name: tripperflow
-description: Aplicación móvil informativa para visualizar información acerca de las capitales de Centroamérica y sus principales sitios turísticos.
+description: Aplicación móvil informativa de las capitales de Centroamérica y sus principales lugares turísticos.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
