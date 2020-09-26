@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -9,6 +10,16 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.light.copyWith(
+        systemNavigationBarColor: Colors.white,
+        statusBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -42,6 +53,7 @@ class _HomeViewState extends State<HomeView> {
             tooltip: "Buscar capital",
           ),
         ],
+        brightness: Brightness.light,
       ),
       body: Center(
         child: Text("HomeView works!."),
