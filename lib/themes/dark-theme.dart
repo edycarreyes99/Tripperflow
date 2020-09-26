@@ -5,4 +5,5 @@ ThemeData darkTheme = ThemeData(
   primarySwatch: Colors.blue,
   accentColor: Colors.blue,
   visualDensity: VisualDensity.adaptivePlatformDensity,
+  fontFamily: "Montserrat",
 );

@@ -8,4 +8,5 @@ ThemeData lightTheme = ThemeData(
   primarySwatch: Colors.orange,
   accentColor: Color.fromRGBO(142, 148, 163, 1),
   visualDensity: VisualDensity.adaptivePlatformDensity,
+  fontFamily: "Montserrat",
 );
