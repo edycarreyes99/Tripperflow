@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tripperflow/themes/light-theme.dart';
-import 'package:tripperflow/views/home.dart';
+import 'package:tripperflow/views/capitales.dart';
 
 void main() {
   runApp(TripperflowApp());
@@ -14,7 +14,7 @@ class TripperflowApp extends StatelessWidget {
       title: 'Tripperflow',
       theme: lightTheme,
       debugShowCheckedModeBanner: !kReleaseMode,
-      home: HomeView(),
+      home: CapitalesView(),
     );
   }
 }
