@@ -21,6 +21,14 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+// para realease
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+// fin para release
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -39,16 +47,52 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.firecodes.tripperflow"
+        multiDexEnabled true
         minSdkVersion 16
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
-    buildTypes {
+    // Configuraciones de la aplicacion
+    signingConfigs {
+        // Configuraciones para release
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            keyAlias keystoreProperties['keyAliasRelease']
+            keyPassword keystoreProperties['keyPasswordRelease']
+            storeFile keystoreProperties['storeFileRelease'] ? file(keystoreProperties['storeFileRelease']) : null
+            storePassword keystoreProperties['storePasswordRelease']
+        }
+
+        // Configuraciones para debug
+        debug {
+            keyAlias keystoreProperties['keyAliasDebug']
+            keyPassword keystoreProperties['keyPasswordDebug']
+            storeFile keystoreProperties['storeFileDebug'] ? file(keystoreProperties['storeFileDebug']) : null
+            storePassword keystoreProperties['storePasswordDebug']
+        }
+    }
+
+    // Tipo de compilados para la aplicacion
+    buildTypes {
+        // Configuraciones para release
+        release {
+
+            minifyEnabled true
+
+            shrinkResources true
+
+            useProguard true
+
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+
+            signingConfig signingConfigs.release
+        }
+
+        // Configuraciones para debug
+        debug {
             signingConfig signingConfigs.debug
         }
     }
