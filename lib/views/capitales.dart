@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class HomeView extends StatefulWidget {
+class CapitalesView extends StatefulWidget {
   @override
-  _HomeViewState createState() => _HomeViewState();
+  _CapitalesViewState createState() => _CapitalesViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _CapitalesViewState extends State<CapitalesView> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
