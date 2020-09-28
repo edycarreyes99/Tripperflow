@@ -22,6 +22,7 @@ dependencies:
   equatable: ^1.2.5
   provider: ^4.3.2+2
   cached_network_image: ^2.3.2+1
+  shared_preferences: ^0.5.12
 
 
   cupertino_icons: ^0.1.3

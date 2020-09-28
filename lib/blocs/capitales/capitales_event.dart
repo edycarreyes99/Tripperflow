@@ -4,11 +4,12 @@ abstract class CapitalesEvent extends Equatable {
   const CapitalesEvent();
 }
 
-class OnMostrarSortDialog extends CapitalesEvent {
-  final bool sortDescending;
+class OnSortCapitales extends CapitalesEvent {
+  final SharedPreferences preferences;
 
-  OnMostrarSortDialog({this.sortDescending});
+  OnSortCapitales({this.preferences});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props =>
+      [preferences, preferences.getBool("sortDescending")];
 }

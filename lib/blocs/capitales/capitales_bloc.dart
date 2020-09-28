@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'capitales_event.dart';
 
@@ -19,8 +20,14 @@ class CapitalesBloc extends Bloc<CapitalesEvent, CapitalesState> {
     CapitalesEvent event,
   ) async* {
     switch (event.runtimeType) {
-      case OnMostrarSortDialog:
-        yield ShowingSortDialog();
+      case OnSortCapitales:
+        await (event.props[0] as SharedPreferences)
+            .setBool("sortDescending", !event.props[1]);
+        if (event.props[1]) {
+          yield ShowCapitalesDescending();
+        } else {
+          yield ShowCapitalesAscending();
+        }
         break;
     }
   }

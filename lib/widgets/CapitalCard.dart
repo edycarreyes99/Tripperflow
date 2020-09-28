@@ -1,12 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripperflow/models/Capital.dart';
+import 'package:tripperflow/views/datalles-capital.dart';
 
 class CapitalCardWidget extends StatefulWidget {
   final Capital capital;
+  final BuildContext context;
+  final SharedPreferences preferences;
 
-  CapitalCardWidget({this.capital});
+  CapitalCardWidget(
+      {@required this.capital,
+      @required this.context,
+      @required this.preferences});
 
   @override
   _CapitalCardWidgetState createState() => _CapitalCardWidgetState();
@@ -16,7 +24,17 @@ class _CapitalCardWidgetState extends State<CapitalCardWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => print("Se ha tocado una capital"),
+      onTap: () {
+        Navigator.push(
+          this.widget.context,
+          MaterialPageRoute(
+            builder: (context) => DetallesCapitalView(
+              preferences: this.widget.preferences,
+              capital: this.widget.capital,
+            ),
+          ),
+        );
+      },
       child: Stack(
         children: [
           Container(
