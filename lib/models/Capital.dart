@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Capital {
   num altitud;
   GeoPoint coordenadasGeograficas;
-  Uri coverCapital;
+  String coverCapital;
   String horario;
   String idCapital;
   List<String> imagenesCapital;
@@ -11,7 +11,7 @@ class Capital {
   String nombreCapital;
   String nombrePais;
   int poblacion;
-  Uri referenciaInformativa;
+  String referenciaInformativa;
   String resenaHistorica;
   num superficie;
   num temperaturaMediaAnual;
@@ -27,7 +27,7 @@ class Capital {
     this.horario = json["horario"];
     this.idCapital = json["ID"];
     this.imagenesCapital = new List<String>();
-    json["Imagenes"].forEach((String imagen) {
+    json["Imagenes"].forEach((imagen) {
       this.imagenesCapital.add(imagen);
     });
     this.likes = json['Likes'];

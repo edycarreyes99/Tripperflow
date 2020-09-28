@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:tripperflow/models/Capital.dart';
+import 'package:tripperflow/widgets/CapitalCard.dart';
 
 class CapitalesView extends StatefulWidget {
   @override
@@ -48,7 +51,10 @@ class _CapitalesViewState extends State<CapitalesView> {
         brightness: Brightness.light,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection("Capitales").snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection("Capitales")
+            .orderBy('Likes', descending: true)
+            .snapshots(),
         builder: (BuildContext streamBuilderContext,
             AsyncSnapshot<QuerySnapshot> capitalSnapshot) {
           if (capitalSnapshot.hasError)
@@ -63,17 +69,18 @@ class _CapitalesViewState extends State<CapitalesView> {
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
             default:
+              List<Capital> capitales = new List<Capital>();
+
+              capitalSnapshot.data.docs.forEach((element) {
+                capitales.add(Capital.parse(element.data()));
+              });
+
               return StaggeredGridView.countBuilder(
                 crossAxisCount: 4,
                 itemCount: capitalSnapshot.data.docs.length,
-                itemBuilder: (BuildContext context, int index) => new Container(
-                  color: Colors.green,
-                  child: new Center(
-                    child: new CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: new Text('$index'),
-                    ),
-                  ),
+                itemBuilder: (BuildContext context, int index) =>
+                    CapitalCardWidget(
+                  capital: capitales[index],
                 ),
                 staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
                 mainAxisSpacing: 10.0,
