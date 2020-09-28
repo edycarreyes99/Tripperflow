@@ -1,9 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:tripperflow/blocs/capitales/capitales_bloc.dart';
 
 class CapitalesView extends StatefulWidget {
   @override
@@ -13,18 +12,6 @@ class CapitalesView extends StatefulWidget {
 class _CapitalesViewState extends State<CapitalesView> {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.light.copyWith(
-        systemNavigationBarColor: Colors.white,
-        statusBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-        statusBarIconBrightness: Brightness.light,
-      ),
-    );
-
-    BlocProvider.of<CapitalesBloc>(context).add(OnFetchCapitales());
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -60,29 +47,39 @@ class _CapitalesViewState extends State<CapitalesView> {
         ],
         brightness: Brightness.light,
       ),
-      body: BlocBuilder<CapitalesBloc, CapitalesState>(
-        builder: (context, state) {
-          return state is FetchingCapitalesState
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : StaggeredGridView.countBuilder(
-                  crossAxisCount: 4,
-                  itemCount: 20,
-                  itemBuilder: (BuildContext context, int index) =>
-                      new Container(
-                    color: Colors.green,
-                    child: new Center(
-                      child: new CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: new Text('$index'),
-                      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection("Capitales").snapshots(),
+        builder: (BuildContext streamBuilderContext,
+            AsyncSnapshot<QuerySnapshot> capitalSnapshot) {
+          if (capitalSnapshot.hasError)
+            return Center(
+                child: Padding(
+              padding: EdgeInsets.all(18),
+              child: Text(
+                  "Hubo un error al extraer las capitales de firestore: ${capitalSnapshot.error}"),
+            ));
+
+          switch (capitalSnapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            default:
+              return StaggeredGridView.countBuilder(
+                crossAxisCount: 4,
+                itemCount: capitalSnapshot.data.docs.length,
+                itemBuilder: (BuildContext context, int index) => new Container(
+                  color: Colors.green,
+                  child: new Center(
+                    child: new CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: new Text('$index'),
                     ),
                   ),
-                  staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 20.0,
-                );
+                ),
+                staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 20.0,
+              );
+          }
         },
       ),
     );

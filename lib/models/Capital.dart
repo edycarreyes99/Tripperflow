@@ -19,7 +19,7 @@ class Capital {
   // Constructor
   Capital();
 
-  // Metodo para parsear la capital a partir de un objeto JSON
+  /// Metodo para parsear la clase [Capital] a partir de un objeto JSON
   Capital.parse(dynamic json) {
     this.altitud = json['Altitud'];
     this.coordenadasGeograficas = json['CoordenadasGeograficas'];
@@ -40,7 +40,7 @@ class Capital {
     this.temperaturaMediaAnual = json['TemperaturaMediaAnual'];
   }
 
-  // Metodo para convertir la clase a un objeto JSON
+  /// Metodo para convertir la clase [Capital] a un objeto JSON
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = new Map<String, dynamic>();
 
