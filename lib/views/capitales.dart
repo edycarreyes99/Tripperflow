@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -29,125 +28,108 @@ class _CapitalesViewState extends State<CapitalesView> {
     super.initState();
     if (this.widget.sharedPreferences.getBool("sortDescending") == null) {
       setDescending();
-    } else if (this.widget.sharedPreferences.getBool("darkTheme") == null) {
-      setTheme();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Se ejecuta el metodo para ordenar las capitales
     BlocProvider.of<CapitalesBloc>(context).add(
       OnSortCapitales(
         preferences: this.widget.sharedPreferences,
       ),
     );
-    return BlocListener<CapitalesBloc, CapitalesState>(
-      listener: (capitalesListenerContext, capitalesListenerState) {
-        switch (capitalesListenerState.runtimeType) {
-        }
-      },
-      child: BlocBuilder<CapitalesBloc, CapitalesState>(
-          builder: (capitalesContext, capitalesState) {
-        return Scaffold(
-          key: this.widget.key,
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: Text(
-              "Capitales",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Colors.grey[900],
-              ),
+    return BlocBuilder<CapitalesBloc, CapitalesState>(
+        builder: (capitalesContext, capitalesState) {
+      return Scaffold(
+        key: this.widget.key,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            "Capitales",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: Colors.grey[900],
             ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.wb_sunny),
-                color: Colors.grey[900],
-                onPressed: () => print("Tema"),
-                tooltip: "Seleccionar tema",
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: capitalesState is ShowCapitalesAscending
+                  ? Icon(Icons.vertical_align_top)
+                  : capitalesState is ShowCapitalesDescending
+                      ? Icon(Icons.vertical_align_bottom)
+                      : Icon(Icons.sort_by_alpha),
+              color: Colors.grey[900],
+              onPressed: () => BlocProvider.of<CapitalesBloc>(context).add(
+                OnSortCapitales(
+                  preferences: this.widget.sharedPreferences,
+                ),
               ),
-              IconButton(
-                icon: capitalesState is ShowCapitalesAscending
-                    ? Icon(Icons.vertical_align_top)
-                    : capitalesState is ShowCapitalesDescending
-                        ? Icon(Icons.vertical_align_bottom)
-                        : Icon(Icons.sort_by_alpha),
-                color: Colors.grey[900],
-                onPressed: () => BlocProvider.of<CapitalesBloc>(context).add(
-                  OnSortCapitales(
+              tooltip: "Ordenar capitales",
+            ),
+            IconButton(
+              icon: Icon(Icons.search),
+              color: Colors.grey[900],
+              onPressed: () => print("Buscar carpital"),
+              tooltip: "Buscar capital",
+            ),
+          ],
+          brightness: Brightness.light,
+        ),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: capitalesState is ShowCapitalesDescending
+              ? FirebaseFirestore.instance
+                  .collection("Capitales")
+                  .orderBy('Likes', descending: true)
+                  .snapshots()
+              : FirebaseFirestore.instance
+                  .collection("Capitales")
+                  .orderBy('Likes', descending: false)
+                  .snapshots(),
+          builder: (BuildContext streamBuilderContext,
+              AsyncSnapshot<QuerySnapshot> capitalSnapshot) {
+            if (capitalSnapshot.hasError)
+              return Center(
+                  child: Padding(
+                padding: EdgeInsets.all(18),
+                child: Text(
+                    "Hubo un error al extraer las capitales de firestore: ${capitalSnapshot.error}"),
+              ));
+
+            switch (capitalSnapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
+              default:
+                List<Capital> capitales = new List<Capital>();
+
+                capitalSnapshot.data.docs.forEach((element) {
+                  capitales.add(Capital.parse(element.data()));
+                });
+
+                return StaggeredGridView.countBuilder(
+                  crossAxisCount: 4,
+                  itemCount: capitalSnapshot.data.docs.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      CapitalCardWidget(
+                    capital: capitales[index],
+                    context: context,
                     preferences: this.widget.sharedPreferences,
                   ),
-                ),
-                tooltip: "Ordenar capitales",
-              ),
-              IconButton(
-                icon: Icon(Icons.search),
-                color: Colors.grey[900],
-                onPressed: () => print("Buscar carpital"),
-                tooltip: "Buscar capital",
-              ),
-            ],
-            brightness: Brightness.light,
-          ),
-          body: StreamBuilder<QuerySnapshot>(
-            stream: capitalesState is ShowCapitalesDescending
-                ? FirebaseFirestore.instance
-                    .collection("Capitales")
-                    .orderBy('Likes', descending: true)
-                    .snapshots()
-                : FirebaseFirestore.instance
-                    .collection("Capitales")
-                    .orderBy('Likes', descending: false)
-                    .snapshots(),
-            builder: (BuildContext streamBuilderContext,
-                AsyncSnapshot<QuerySnapshot> capitalSnapshot) {
-              if (capitalSnapshot.hasError)
-                return Center(
-                    child: Padding(
-                  padding: EdgeInsets.all(18),
-                  child: Text(
-                      "Hubo un error al extraer las capitales de firestore: ${capitalSnapshot.error}"),
-                ));
-
-              switch (capitalSnapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
-                default:
-                  List<Capital> capitales = new List<Capital>();
-
-                  capitalSnapshot.data.docs.forEach((element) {
-                    capitales.add(Capital.parse(element.data()));
-                  });
-
-                  return StaggeredGridView.countBuilder(
-                    crossAxisCount: 4,
-                    itemCount: capitalSnapshot.data.docs.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        CapitalCardWidget(
-                      capital: capitales[index],
-                    ),
-                    staggeredTileBuilder: (int index) =>
-                        new StaggeredTile.fit(2),
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 20.0,
-                  );
-              }
-            },
-          ),
-        );
-      }),
-    );
+                  staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 20.0,
+                );
+            }
+          },
+        ),
+      );
+    });
   }
 
   void setDescending() async {
     await this.widget.sharedPreferences.setBool("sortDescending", false);
-  }
-
-  void setTheme() async {
-    await this.widget.sharedPreferences.setBool("darkTheme",
-        SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
   }
 }

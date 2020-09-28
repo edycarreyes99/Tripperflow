@@ -10,5 +10,6 @@ class OnSortCapitales extends CapitalesEvent {
   OnSortCapitales({this.preferences});
 
   @override
-  List<Object> get props => [preferences, preferences.getBool("sortDescending")];
+  List<Object> get props =>
+      [preferences, preferences.getBool("sortDescending")];
 }
