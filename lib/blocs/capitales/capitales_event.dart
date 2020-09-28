@@ -4,8 +4,11 @@ abstract class CapitalesEvent extends Equatable {
   const CapitalesEvent();
 }
 
+class OnMostrarSortDialog extends CapitalesEvent {
+  final bool sortDescending;
 
-class OnFetchCapitales extends CapitalesEvent {
+  OnMostrarSortDialog({this.sortDescending});
+
   @override
   List<Object> get props => [];
 }

@@ -10,6 +10,7 @@ part 'capitales_state.dart';
 
 class CapitalesBloc extends Bloc<CapitalesEvent, CapitalesState> {
   final BuildContext context;
+  bool sortDescending = true;
 
   CapitalesBloc({this.context}) : super(CapitalesInitialState());
 
@@ -18,15 +19,9 @@ class CapitalesBloc extends Bloc<CapitalesEvent, CapitalesState> {
     CapitalesEvent event,
   ) async* {
     switch (event.runtimeType) {
-      case OnFetchCapitales:
-        yield FetchingCapitalesState();
-
-        await Future.delayed(Duration(seconds: 2));
-
-        yield EmptyCapitalesState();
+      case OnMostrarSortDialog:
+        yield ShowingSortDialog();
         break;
     }
   }
-
-  String getNombre() => "HOla mundo";
 }

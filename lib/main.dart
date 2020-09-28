@@ -30,7 +30,10 @@ class TripperflowApp extends StatelessWidget {
         future: Firebase.initializeApp(),
         builder: (firebaseInitContext, firebaseInitSnapshot) {
           if (firebaseInitSnapshot.connectionState == ConnectionState.done) {
-            return CapitalesView();
+            return BlocProvider(
+              create: (blocContext) => CapitalesBloc(),
+              child: CapitalesView(),
+            );
           } else {
             return Scaffold(
               body: Center(

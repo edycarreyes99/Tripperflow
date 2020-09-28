@@ -9,27 +9,8 @@ class CapitalesInitialState extends CapitalesState {
   List<Object> get props => [];
 }
 
-/// Estados para el evento [OnGetCapitales]
-class FetchingCapitalesState extends CapitalesState {
+/// Estados para el evento [OnMostrarSortDialog]
+class ShowingSortDialog extends CapitalesState {
   @override
   List<Object> get props => [];
-}
-
-class FetchedCapitalesState extends CapitalesState {
-  @override
-  List<Object> get props => [];
-}
-
-class EmptyCapitalesState extends CapitalesState {
-  @override
-  List<Object> get props => [];
-}
-
-class ErrorFetchingCapitalesState extends CapitalesState {
-  final String message;
-
-  ErrorFetchingCapitalesState(this.message);
-
-  @override
-  List<Object> get props => [message];
 }
