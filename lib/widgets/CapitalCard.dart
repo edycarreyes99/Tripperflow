@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tripperflow/blocs/detalles_capital/detalles_capital_bloc.dart';
 import 'package:tripperflow/models/Capital.dart';
 import 'package:tripperflow/views/datalles-capital.dart';
 
@@ -28,9 +29,12 @@ class _CapitalCardWidgetState extends State<CapitalCardWidget> {
         Navigator.push(
           this.widget.context,
           MaterialPageRoute(
-            builder: (context) => DetallesCapitalView(
-              preferences: this.widget.preferences,
-              capital: this.widget.capital,
+            builder: (context) => BlocProvider(
+              create: (blocContext) => DetallesCapitalBloc(),
+              child: DetallesCapitalView(
+                preferences: this.widget.preferences,
+                capital: this.widget.capital,
+              ),
             ),
           ),
         );
