@@ -163,12 +163,44 @@ class _DetallesCapitalViewState extends State<DetallesCapitalView> {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 16),
-                                child: CapitalInfoWidget(
-                                    icono: Icons.history,
-                                    title: "Reseña histórica",
-                                    subTitle: capital.resenaHistorica,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.history,
+                                            color: Colors.grey[900],
+                                            size: 18,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              "Reseña histórica",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      capital.resenaHistorica,
+                                      textAlign: TextAlign.justify,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
