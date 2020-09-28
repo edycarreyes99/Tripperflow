@@ -9,8 +9,13 @@ class CapitalesInitialState extends CapitalesState {
   List<Object> get props => [];
 }
 
-/// Estados para el evento [OnMostrarSortDialog]
-class ShowingSortDialog extends CapitalesState {
+/// Estados para el evento [OnSortCapitales]
+class ShowCapitalesDescending extends CapitalesState {
+  @override
+  List<Object> get props => [];
+}
+
+class ShowCapitalesAscending extends CapitalesState {
   @override
   List<Object> get props => [];
 }

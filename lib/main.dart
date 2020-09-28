@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tripperflow/blocs/capitales/capitales_bloc.dart';
 import 'package:tripperflow/themes/light-theme.dart';
 import 'package:tripperflow/views/capitales.dart';
+import 'package:tripperflow/views/waiting.dart';
 
 void main() {
   runApp(TripperflowApp());
@@ -26,24 +28,32 @@ class TripperflowApp extends StatelessWidget {
       title: 'Tripperflow',
       theme: lightTheme,
       debugShowCheckedModeBanner: !kReleaseMode,
-      home: FutureBuilder(
+      home: FutureBuilder<FirebaseApp>(
         future: Firebase.initializeApp(),
-        builder: (firebaseInitContext, firebaseInitSnapshot) {
+        builder: (firebaseInitContext,
+            AsyncSnapshot<FirebaseApp> firebaseInitSnapshot) {
           if (firebaseInitSnapshot.connectionState == ConnectionState.done) {
-            return BlocProvider(
-              create: (blocContext) => CapitalesBloc(),
-              child: CapitalesView(),
+            print("Firebase connection done!.");
+            return FutureBuilder<SharedPreferences>(
+              future: SharedPreferences.getInstance(),
+              builder: (sharedPrefsContext,
+                  AsyncSnapshot<SharedPreferences> sharedPrefsSnapshot) {
+                if (sharedPrefsSnapshot.connectionState ==
+                    ConnectionState.done) {
+                  print("SharedPreferences connection done!.");
+                  return BlocProvider(
+                    create: (blocContext) => CapitalesBloc(),
+                    child: CapitalesView(
+                      sharedPreferences: sharedPrefsSnapshot.data,
+                    ),
+                  );
+                } else {
+                  return WaitingView();
+                }
+              },
             );
           } else {
-            return Scaffold(
-              body: Center(
-                child: Image.asset(
-                  'assets/images/Tripperflow-Logo.png',
-                  width: 80,
-                  height: 90,
-                ),
-              ),
-            );
+            return WaitingView();
           }
         },
       ),
