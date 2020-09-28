@@ -21,6 +21,7 @@ dependencies:
   flutter_bloc: ^6.0.5
   equatable: ^1.2.5
   provider: ^4.3.2+2
+  cached_network_image: ^2.3.2+1
 
 
   cupertino_icons: ^0.1.3
