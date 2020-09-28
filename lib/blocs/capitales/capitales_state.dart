@@ -9,7 +9,7 @@ class CapitalesInitialState extends CapitalesState {
   List<Object> get props => [];
 }
 
-/// Estados para [OnGetCapitales]
+/// Estados para el evento [OnGetCapitales]
 class FetchingCapitalesState extends CapitalesState {
   @override
   List<Object> get props => [];
