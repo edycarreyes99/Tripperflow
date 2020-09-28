@@ -70,12 +70,6 @@ class _CapitalesViewState extends State<CapitalesView> {
               ),
               tooltip: "Ordenar capitales",
             ),
-            IconButton(
-              icon: Icon(Icons.search),
-              color: Colors.grey[900],
-              onPressed: () => print("Buscar carpital"),
-              tooltip: "Buscar capital",
-            ),
           ],
           brightness: Brightness.light,
         ),
