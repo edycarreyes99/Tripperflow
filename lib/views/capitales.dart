@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:tripperflow/blocs/capitales/capitales_bloc.dart';
 
 class CapitalesView extends StatefulWidget {
   @override
@@ -20,6 +22,8 @@ class _CapitalesViewState extends State<CapitalesView> {
         statusBarIconBrightness: Brightness.light,
       ),
     );
+
+    BlocProvider.of<CapitalesBloc>(context).add(OnFetchCapitales());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -56,21 +60,30 @@ class _CapitalesViewState extends State<CapitalesView> {
         ],
         brightness: Brightness.light,
       ),
-      body: StaggeredGridView.countBuilder(
-        crossAxisCount: 4,
-        itemCount: 20,
-        itemBuilder: (BuildContext context, int index) => new Container(
-          color: Colors.green,
-          child: new Center(
-            child: new CircleAvatar(
-              backgroundColor: Colors.white,
-              child: new Text('$index'),
-            ),
-          ),
-        ),
-        staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 20.0,
+      body: BlocBuilder<CapitalesBloc, CapitalesState>(
+        builder: (context, state) {
+          return state is FetchingCapitalesState
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : StaggeredGridView.countBuilder(
+                  crossAxisCount: 4,
+                  itemCount: 20,
+                  itemBuilder: (BuildContext context, int index) =>
+                      new Container(
+                    color: Colors.green,
+                    child: new Center(
+                      child: new CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: new Text('$index'),
+                      ),
+                    ),
+                  ),
+                  staggeredTileBuilder: (int index) => new StaggeredTile.fit(2),
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 20.0,
+                );
+        },
       ),
     );
   }
